@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+
+      <section class="section">
+        <div class="container-fluid">
+
+          <div class="title-wrapper pt-30">
+            <div class="row align-items-center">
+              <div class="col-md-6">
+                <div class="title">
+                  <h2>ProjectFlow Add Members</h2>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+
+
+          <div class="row justify-content-center">
+            <div class="col-lg-11">
+                <form action="{% url 'add_members' %}" method="post">
+                {% csrf_token %}
+              <div class="card-style settings-card-1 mb-30">
+                <div class="title mb-30 d-flex justify-content-between align-items-center">
+                  <h6>My Profile</h6>
+                  <button class="border-0 bg-transparent">
+                    <i class="lni lni-pencil-alt"></i>
+                  </button>
+                </div>
+                <div class="profile-info">
+
+                  <div class="input-style-1">
+                    <label>Username</label>
+                    <input type="text" placeholder="Username" name="uname" />
+                  </div>
+                  <div class="input-style-1">
+                    <label>Password</label>
+                    <input type="password" placeholder="Password" name="pass"/>
+                  </div>
+                  <div class="col-xxl-4">
+                    <div class="select-style-1">
+                        <label>Role</label>
+                        <div class="select-position">
+                            <select class="light-bg" name="role" required>
+                                <option default="true">Select a Role</option>
+                                <option value="member">Member</option>
+                                <option value="leader">Leader</option>
+                                <option value="developer">Developer</option>
+                            </select>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <button type="submit" class="main-btn primary-btn btn-hover">
+                      Add Member
+                    </button>
+                  </div>
+                </div>
+            </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+
+
+
+        </div>
+      </section>
+
+
+      {% endblock %}

@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+
+      <section class="section">
+        <div class="container-fluid">
+
+          <div class="title-wrapper pt-30">
+            <div class="row align-items-center">
+              <div class="col-md-6">
+                <div class="title">
+                  <h2>ProjectFlow Members</h2>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+
+          <div class="tables-wrapper">
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="card-style mb-30">
+                  <h6 class="mb-10">Members</h6>
+                  <div class="table-wrapper table-responsive">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th class="lead-info">
+                            <h6>Username</h6>
+                          </th>
+                          <th class="lead-email">
+                            <h6>First Name</h6>
+                          </th>
+                          <th class="lead-phone">
+                            <h6>Last Name</h6>
+                          </th>
+                          <th class="lead-company">
+                            <h6>Email</h6>
+                          </th>
+                          <th class="lead-company">
+                            <h6>Role</h6>
+                          </th>
+                          <th>
+                            <h6>Action</h6>
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+
+                        {% for member in members %}
+                        <tr>
+                          <td class="min-width">
+                            <div class="lead">
+                              <div class="lead-text">
+                                <p>{{member.username}}</p>
+                              </div>
+                            </div>
+                          </td>
+                          <td class="min-width">
+                            <p>{{member.first_name}}</p>
+                          </td>
+                          <td class="min-width">
+                            <p>{{member.last_name}}</p>
+                          </td>
+                          <td class="min-width">
+                            <p>{{member.email}}</p>
+                          </td>
+                          <td class="min-width">
+                            <p>{{member.role}}</p>
+                          </td>
+                          <td>
+                              <div class="action">
+                                {% if not member.role == "manager" %}
+                              <a href="{% url 'remove_member' member.id %}" class="text-danger">
+                                <i class="lni lni-trash-can"></i>
+                              </a> 
+                              &nbsp;&nbsp;
+                              &nbsp;&nbsp;
+                              &nbsp;&nbsp;
+                              &nbsp;&nbsp;
+                              &nbsp;&nbsp;
+                              &nbsp;&nbsp;
+
+                              {% endif %}
+                              <a href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop{{member.id}}" class="text-edit">
+                                <span class="mdi mdi-account-edit-outline"></span>
+                              </a>
+                            </div>
+
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="staticBackdrop{{member.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdrop{{member.id}}Label" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="staticBackdrop{{member.id}}Label">Edit Member</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                    <form action="{% url 'edit_member' member.id %}" method="post">
+                                      {% csrf_token %}
+                                      <div class="input-style-1">
+                                        <label>Username</label>
+                                        <input type="text" placeholder="Username" name="uname" value="{{member.username}}" />
+                                      </div>
+                                      <div class="input-style-1">
+                                        <label>Password</label>
+                                        <input type="password" placeholder="Password" name="pass"/>
+                                      </div>
+                                      <div class="col-xxl-4">
+                                        <div class="select-style-1">
+                                            <label>Role</label>
+                                            <div class="select-position">
+                                                <select class="light-bg" name="role" required>
+                                                    <option default="true">{{member.role}}</option>
+                                                    <option value="member">Member</option>
+                                                    <option value="leader">Leader</option>
+                                                    <option value="developer">Developer</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                                    </div>
+                                    </form>
+                                </div>
+                                </div>
+                            </div>
+                          </td>
+                          
+
+                        </tr>
+                        {% endfor %}
+                       
+                       
+                      </tbody>
+                    </table>
+
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+
+
+
+
+        </div>
+      </section>
+
+
+      {% endblock %}

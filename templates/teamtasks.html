@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+
+      <section class="section">
+        <div class="container-fluid">
+
+          <div class="title-wrapper pt-30">
+            <div class="row align-items-center">
+              <div class="col-md-6">
+                <div class="title">
+                  <h2>{{projects|upper}}</h2>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+
+
+          
+    <div class="row justify-content-center">
+        <div class="col-lg-11">
+          <div class="card-style mb-30">
+            <h6 class="mb-10">Tasks</h6>
+            <div class="table-wrapper table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th class="lead-info">
+                      <h6>#</h6>
+                    </th>
+                    <th class="lead-info">
+                      <h6>Name</h6>
+                    </th>
+                    <th class="lead-company">
+                      <h6>Date And Time</h6>
+                    </th>
+                    <th>
+                      <h6>Action</h6>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  
+
+                  {% for task in tasks %}
+                  <tr>
+                      <td class="min-width">
+                          <div class="lead">
+                              <div class="lead-text">
+                                  <p>{{ forloop.counter }}</p>
+                              </div>
+                          </div>
+                      </td>
+                      <td class="min-width">
+                          <p>{{ task.user }}</p>
+                      </td>
+                      <td class="min-width">
+                          <p>{{ task.created_at }}</p>
+                      </td>
+                      <td>
+                        <div class="action">
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop{{ task.id }}" class="text-edit">
+                          <span class="mdi mdi-dots-horizontal"></span>
+                        </a>
+                      </div>
+
+
+                      <!-- Modal -->
+                      <div class="modal fade" id="staticBackdrop{{ task.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdrop{{ task.id }}Label" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered">
+                          <div class="modal-content">
+                              <div class="modal-header">
+                              <h1 class="modal-title fs-5" id="staticBackdrop{{ task.id }}Label">Edit Member</h1>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body">
+                              <form method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="task_id" value="{{task.id}}">
+                                <div class="input-style-1">
+                                  <label>Description</label>
+                                  <textarea rows="10" cols="40" readonly>{{task.description}}</textarea>
+                                </div>
+                                <div class="input-style-1">
+                                  <label>File</label>
+                                  <p><a href="{{task.file.url}}" style="text-decoration: none;">{{ task.file.name|cut:"task_files/" }}</a></p>
+                                </div>
+
+
+
+                              </div>
+                              <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                              <a href="{% url 'task_comment' task.id %}" class="btn btn-primary">Review</a>
+                              </div>
+                              </form>
+                          </div>
+                          </div>
+                      </div>
+                    </td>
+                    
+
+
+                  </tr>
+                  {% endfor %}
+
+
+                 
+                 
+                </tbody>
+              </table>
+
+
+            </div>
+          </div>
+        </div>
+
+    </div>
+
+
+
+
+
+
+
+        </div>
+      </section>
+
+
+      {% endblock %}

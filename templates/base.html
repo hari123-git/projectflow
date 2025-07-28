@@ -1,0 +1,284 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="{% static 'assets/images/favicon.svg' %}" type="image/x-icon" />
+    <title>ProjectFlow</title>
+
+
+    <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets/css/lineicons.css' %}" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="{% static 'assets/css/materialdesignicons.min.css' %}" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="{% static 'assets/css/fullcalendar.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets/css/fullcalendar.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets/css/main.css' %}" />
+  </head>
+  <body>
+
+
+    
+    <aside class="sidebar-nav-wrapper">
+      <div class="navbar-logo">
+        <a href="index.html">
+          <img src="{% static 'assets/images/logo/logo.svg' %}" alt="logo" />
+        </a>
+      </div>
+
+
+
+      <nav class="sidebar-nav">
+
+
+
+        <ul>
+
+
+
+
+
+          
+
+
+          <li class="nav-item">
+            <a href="{% url 'home' %}">
+              <span class="icon">
+                <span class="mdi mdi-view-dashboard"></span>
+              </span>
+              <span class="text">Dashboard</span>
+            </a>
+          </li>
+
+          {% if user.role == 'manager' %}
+          <li class="nav-item">
+            <a href="{% url 'add_members' %}">
+              <span class="icon">
+                <span class="mdi mdi-account-multiple-plus"></span>
+              </span>
+              <span class="text">Add Members</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'view_members' %}">
+              <span class="icon">
+                <span class="mdi mdi-account-group-outline"></span>
+              </span>
+              <span class="text">Members</span>
+            </a>
+          </li>
+
+            <li class="nav-item">
+                <a href="{% url 'add_project' %}">
+                <span class="icon">
+                    <span class="mdi mdi-plus"></span>
+                </span>
+                <span class="text">Add Project</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'view_projects' %}">
+                <span class="icon">
+                  <span class="mdi mdi-folder-multiple-outline"></span>
+                </span>
+                <span class="text"> Projects</span>
+                </a>
+            </li>
+
+            {% elif user.role == 'developer' %}
+            <li class="nav-item">
+                <a href="{% url 'view_project' %}">
+                <span class="icon">
+                  <span class="mdi mdi-folder-multiple-outline"></span>
+
+                </span>
+                <span class="text"> Projects</span>
+                </a>
+            </li>
+
+
+
+            {% elif user.role == 'leader' %}
+
+            <li class="nav-item">
+                <a href="{% url 'view_project' %}">
+                <span class="icon">
+                  <span class="mdi mdi-folder-multiple-outline"></span>
+
+                </span>
+                <span class="text"> Projects</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'teamtasks' %}">
+                <span class="icon">
+                  <span class="mdi mdi-account-group-outline"></span>
+
+                </span>
+                <span class="text">Team Tasks</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'tasks' %}">
+                <span class="icon">
+                  <span class="mdi mdi-file-tree"></span>
+
+                </span>
+                <span class="text">Assign Tasks</span>
+                </a>
+            </li>
+
+
+          {% endif %}
+
+
+
+
+
+        </ul>
+
+
+
+      </nav>
+
+
+    </aside>
+    <div class="overlay"></div>
+
+    <main class="main-wrapper">
+      <header class="header">
+
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-lg-5 col-md-5 col-6">
+              <div class="header-left d-flex align-items-center">
+                <div class="menu-toggle-btn mr-15">
+                  <button id="menu-toggle" class="main-btn primary-btn btn-hover">
+                    <i class="lni lni-chevron-left me-2"></i> Menu
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-7 col-md-7 col-6">
+                <div class="header-right">
+                    <div class="profile-box ml-15">
+                        <button class="dropdown-toggle bg-transparent border-0" type="button" id="profile"
+                          data-bs-toggle="dropdown" aria-expanded="false">
+                          <div class="profile-info">
+                            <div class="info">
+                              <div class="image">
+                                <img src="{% static 'assets/images/profile/profile-image.png' %}" alt="" />
+                              </div>
+                              <div>
+                                <h6 class="fw-500">{{request.user}}</h6>
+                                <p>{{request.user.role}}</p>
+                              </div>
+                            </div>
+                          </div>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profile">
+                          <li>
+                            <div class="author-info flex items-center !p-1">
+                              <div class="image">
+                                <img src="{% static 'assets/images/profile/profile-image.png' %}" alt="image">
+                              </div>
+                              <div class="content">
+                                <h4 class="text-sm">{{request.user}}</h4>
+                                <a class="text-black/40 dark:text-white/40 hover:text-black dark:hover:text-white text-xs"
+                                  href="#">{{request.user.email}}</a>
+                              </div>
+                            </div>
+                          </li>
+                          <li class="divider"></li>
+                          {% if user.is_superuser %}
+                          <li>
+                            <a href="/admin">
+                              <i class="lni lni-user"></i> Admin Panel
+                            </a>
+                          </li>
+                          {% endif %}
+
+                          </li>
+                          <li class="divider"></li>
+                          <li>
+                            <a href="{% url 'logout' %}"> <i class="lni lni-exit"></i> Sign Out </a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                </div>
+          </div>
+        </div>
+      </header>
+
+
+      {% block content %}
+
+      {% endblock %}
+
+
+
+      <footer class="footer">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-6 order-last order-md-first">
+              <div class="copyright text-center text-md-start">
+                <p class="text-sm">
+                  Designed and Developed by
+                  <a href="https://plainadmin.com" rel="nofollow" target="_blank">
+                    PlainAdmin
+                  </a>
+                </p>
+              </div>
+            </div>
+            <!-- end col-->
+            <div class="col-md-6">
+              <div class="terms d-flex justify-content-center justify-content-md-end">
+                <a href="#0" class="text-sm">Term & Conditions</a>
+                <a href="#0" class="text-sm ml-15">Privacy & Policy</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+
+
+
+    {% if messages %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            {% for message in messages %}
+                {% if message.tags %} 
+                    let messageType = "{{ message.tags }}";  // Get message type (e.g., 'error', 'success')
+                {% else %}
+                    let messageType = "info";  // Default type
+                {% endif %}
+
+                Swal.fire({
+                    icon: messageType,  // Sets the icon dynamically
+                    title: messageType.charAt(0).toUpperCase() + messageType.slice(1), // Capitalize first letter
+                    text: "{{ message|safe }}",
+                });
+            {% endfor %}
+        });
+    </script>
+{% endif %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script src="{% static 'assets/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'assets/js/Chart.min.js' %}"></script>
+    <script src="{% static 'assets/js/dynamic-pie-chart.js' %}"></script>
+    <script src="{% static 'assets/js/moment.min.js' %}"></script>
+    <script src="{% static 'assets/js/fullcalendar.js' %}"></script>
+    <script src="{% static 'assets/js/jvectormap.min.js' %}"></script>
+    <script src="{% static 'assets/js/world-merc.js' %}"></script>
+    <script src="{% static 'assets/js/polyfill.js' %}"></script>
+    <script src="{% static 'assets/js/main.js' %}"></script>
+
+
+
+  </body>
+</html>

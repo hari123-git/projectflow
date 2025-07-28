@@ -1,0 +1,237 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+
+<section class="section">
+    <div class="container-fluid">
+
+
+        
+
+
+
+
+        <div class="title-wrapper pt-30">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="title">
+                        <h2>{{ projects|upper }}</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <div class="row justify-content-center">
+            <div class="col-lg-11">
+              <div class="card-style mb-30">
+                <h6 class="mb-10">My Tasks</h6>
+                <div class="table-wrapper table-responsive">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th class="lead-info">
+                          <h6>#</h6>
+                        </th>
+                        <th class="lead-company">
+                          <h6>Description</h6>
+                        </th>
+                        <th>
+                          <h6>DeadLine</h6>
+                        </th>
+                        <th>
+                          <h6>Action</h6>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      
+                        {% if mytasks %}
+                      {% for task in mytasks %}
+                    
+                      <tr>
+                          <td >
+                              <div class="lead">
+                                  <div class="lead-text">
+                                      <p>{{ forloop.counter }}</p>
+                                  </div>
+                              </div>
+                          </td>
+                          <td >
+                              <p>{{ task.description }}</p>
+                          </td>
+                          <td >
+                              <p>{{ task.deadline }}</p>
+                          </td>
+                            <td >
+                                <a href="{% url 'view_project' %}?tid={{task.id}}">Completed</p>
+                            </td>
+                      </tr>
+
+                      {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="4">
+                                    <p>No tasks found</p>
+                                </td>
+                            </tr>
+                        {% endif %}
+  
+  
+                     
+                     
+                    </tbody>
+                  </table>
+  
+  
+                </div>
+              </div>
+            </div>
+  
+        </div>
+
+
+
+
+
+
+        <div class="row justify-content-center">
+            <div class="col-lg-11">
+                <form action="{% url 'view_project' %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="card-style settings-card-1 mb-30">
+                        <div class="title mb-30 d-flex justify-content-between align-items-center">
+                            <h6>Task</h6>
+                        </div>
+                        <div class="profile-info">
+
+                            <div class="input-style-1">
+                                <label>Description</label>
+                                <textarea type="text" placeholder="What i've done" name="desc" rows="4" cols="50" required></textarea>
+                            </div>
+                            <div class="input-style-1">
+                                <label>File</label>
+                                <input type="file" placeholder="File" name="file" required/>
+                            </div>
+
+                            <div class="col-12">
+                                <button type="submit" class="main-btn primary-btn btn-hover">
+                                    Submit
+                                </button>
+
+
+                            </div>
+                        </div>
+                </form>
+            </div>
+
+        </div>
+
+
+
+
+    <div class="row justify-content-center">
+          <div class="col-lg-11">
+            <div class="card-style mb-30">
+              <h6 class="mb-10">Members</h6>
+              <div class="table-wrapper table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th class="lead-info">
+                        <h6>#</h6>
+                      </th>
+                      <th class="lead-company">
+                        <h6>Date And Time</h6>
+                      </th>
+                      <th class="lead-company">
+                        <h6>Description</h6>
+                      </th>
+                      <th>
+                        <h6>File</h6>
+                      </th>
+                      <th>
+                        <h6>Action</h6>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    
+
+                    {% for task in tasks %}
+                    <tr>
+                        <td >
+                            <div class="lead">
+                                <div class="lead-text">
+                                    <p>{{ forloop.counter }}</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td >
+                            <p>{{ task.created_at }}</p>
+                        </td>
+                        <td class="min-width">
+                            
+                                {% if task.description|length > 20 %}
+                                    <p class="task-short">{{ task.description|slice:":20" }}...</p>
+                                    <div style="max-width: 400px; word-wrap: break-word; white-space: pre-wrap;">
+                                    <p class="task-full" style="display: none;">{{ task.description }}</p>
+                                    </div>
+                                    <a href="javascript:void(0);" class="toggle-description" onclick="toggleDescription(this)">Read More</a>
+                                {% else %}
+                                    <p>{{ task.description }}</p>
+                                {% endif %}
+                            
+                        </td>
+                        <td class="min-width">
+                            <p><a href="{{task.file.url}}" style="text-decoration: none;">{{ task.file.name|cut:"task_files/" }}</a></p>
+                        </td>
+                        <td class="min-width">
+                            <a href="{% url 'task_comment' task.id %}">Review</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+
+                   
+                   
+                  </tbody>
+                </table>
+
+
+              </div>
+            </div>
+          </div>
+
+      </div>
+
+
+
+    </div>
+</section>
+
+<script>
+    function toggleDescription(link) {
+        const container = link.parentElement;
+        const shortText = container.querySelector('.task-short');
+        const fullText = container.querySelector('.task-full');
+
+        if (shortText.style.display === 'none') {
+            shortText.style.display = 'block';
+            fullText.style.display = 'none';
+            link.innerText = 'Read More';
+        } else {
+            shortText.style.display = 'none';
+            fullText.style.display = 'block';
+            link.innerText = 'Show Less';
+        }
+    }
+</script>
+
+
+{% endblock %}

@@ -1,0 +1,209 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_filters %}
+{% block content %}
+
+
+
+      <section class="section">
+        <div class="container-fluid">
+
+          <div class="title-wrapper pt-30">
+            <div class="row align-items-center">
+              <div class="col-md-6">
+                <div class="title">
+                  <h2>ProjectFlow Projects</h2>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+
+
+
+          <div class="tables-wrapper">
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="card-style mb-30">
+                  <h6 class="mb-10">Projects</h6>
+                  <div class="table-wrapper table-responsive">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th class="lead-info">
+                            <h6>Name</h6>
+                          </th>
+                          <th class="lead-company">
+                            <h6>DeadLine</h6>
+                          </th>
+                          <th class="lead-company">
+                            <h6>Status</h6>
+                          </th>
+                          <th class="lead-company">
+                            <h6>Progress</h6>
+                          </th>
+                          <th>
+                            <h6>Action</h6>
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+
+                        {% for project in projects %}
+                        <tr>
+                          <td class="min-width">
+                            <div class="lead">
+                              <div class="lead-text">
+                                <p>{{project.name}}</p>
+                              </div>
+                            </div>
+                          </td>
+                          <td class="min-width">
+                            <p>{{project.deadline}}</p>
+                          </td>
+                          <td class="min-width">
+                            <p>{{project.status}}</p>
+                          </td>
+                          <td class="min-width">
+                            <div class="progress" style="height: 15px; width: 50%;">
+                              <div class="progress-bar" role="progressbar" style="width: {{ project.progress }}%;" aria-valuenow="{{ project.progress }}" aria-valuemin="0" aria-valuemax="100">{{ project.progress }}%</div>
+                            </div>
+                          </td>
+                          <td>
+                            <div class="action">
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop{{ project.id }}">
+                              View
+                            </a>
+                          </div>
+
+
+                          <!-- Modal -->
+                          <div class="modal fade" id="staticBackdrop{{ project.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdrop{{ project.id }}Label" aria-hidden="true">
+                              <div class="modal-dialog modal-dialog-centered">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                  <h1 class="modal-title fs-5" id="staticBackdrop{{ project.id }}Label">Edit PRoject</h1>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                  <form method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="project_id" value="{{project.id}}">
+                                    <div class="input-style-1">
+                                      <label>Project Name</label>
+                                      <input type="text" placeholder="Project Name" name="name" value="{{project.name}}" />
+                                    </div>
+                                    <div class="input-style-1">
+                                      <label>DeadLine</label>
+                                      <input type="date" placeholder="DeadLine" name="deadline"/>
+                                    </div>
+
+                                    <div class="col-xxl-4">
+                                        <div class="select-style-1">
+                                            <label>Status</label>
+                                            <div class="select-position">
+                                                <select class="light-bg" name="status" required>
+                                                    <option default="true">{{project.status}}</option>
+                                                    <option value="Not Started">Not Started</option>
+                                                    <option value="On Going">On Going</option>
+                                                    <option value="Completed">Completed</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-4">
+                                      <a href="{% url 'tasks' %}?pid={{project.id}}" class="btn btn-danger">Divide Project</a>
+                                    </div>
+                                    <br>
+                                    <div class="input-style-1">
+                                      <label>Abstract</label>
+                                      <textarea type="text" name="abstract" rows="4" cols="50" required>{{project.abstract}}</textarea>
+                                    </div>
+                                    <!-- Members Table -->
+                                    <div class="table-wrapper table-responsive">
+                                      <table class="table">
+                                        <thead>
+                                          <tr>
+                                            <th class="lead-info">
+                                              <h6>Member Name</h6>
+                                            </th>
+                                            <th class="lead-company">
+                                              <h6>Role</h6>
+                                            </th>
+                                            <th class="lead-company">
+                                              <h6>Action</h6>
+                                            </th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                          {% for member in members %}
+                                          
+                                          <tr>
+                                            <td class="min-width">
+                                              <div class="lead">
+                                                <div class="lead-text">
+                                                  <p>{{ member.username }}</p>
+                                                </div>
+                                              </div>
+                                            </td>
+                                            <td class="min-width">
+                                              <p>{{ member.role }}</p>
+                                            </td>
+                                            <td>
+                                                {% if member.on_project %}
+                                                <div class="action">
+                                                    <a href="{% url 'remove_member_from_project' member.id%}" class="text-danger">
+                                                    <i class="lni lni-trash-can"></i>
+                                                    </a>
+                                                </div>
+                                                {%else%}
+
+                                                <div class="action">
+                                                    <a href="{% url 'add_member_to_project' member.id project.id %}">
+                                                    <span class="mdi mdi-account-edit-outline"></span>
+                                                    </a>
+                                                </div>
+                                                {%endif%}
+                                            </td>
+                                          </tr>
+                                          {% endfor %}
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                    <!-- End Members Table -->
+
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                                  </div>
+                                  </form>
+
+
+                              </div>
+                              </div>
+                          </div>
+                        </td>
+
+                        </tr>
+                        {% endfor %}
+                       
+
+                      </tbody>
+                    </table>
+
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+
+
+
+        </div>
+      </section>
+
+
+      {% endblock %}
